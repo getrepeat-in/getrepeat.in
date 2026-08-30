@@ -119,7 +119,7 @@ export function Highlighter({
   ])
 
   return (
-    <span ref={elementRef} className="relative inline-flex items-center justify-center leading-none">
+    <span ref={elementRef} className="inline-block relative">
       {children}
     </span>
   )

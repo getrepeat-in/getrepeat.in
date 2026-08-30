@@ -1,32 +1,17 @@
 "use client";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
+import { Check } from "lucide-react";
 import { motion } from "framer-motion";
-import { Check, Loader2 } from "lucide-react";
-import { paymentService } from "@/services/frontend/payment.service";
+import { useRouter } from "next/navigation";
+import Button from "@/components/global/button";
 
 export default function PricingCard({ plan, index }) {
-    const { title, description, price, duration, billingCycle, isPopular, badge, features } = plan;
-    const [isProcessing, setIsProcessing] = useState(false);
+    const { _id, title, description, price, billingCycle, isPopular, badge, features } = plan;
+    const router = useRouter();
 
-    const handlePayment = async () => {
-        setIsProcessing(true);
-        await paymentService.initiateCheckout({
-            planTitle: title,
-            price: price,
-            onSuccess: () => {
-                alert("Payment successful! Welcome to Get Repeat.");
-                setIsProcessing(false);
-            },
-            onError: (err) => {
-                alert(err.message);
-                setIsProcessing(false);
-            },
-            onDismiss: () => {
-                setIsProcessing(false);
-            }
-        });
+    const onGetStarted = () => {
+        router.push(`/cart?plan=${_id}`);
     };
 
     return (
@@ -38,7 +23,7 @@ export default function PricingCard({ plan, index }) {
                 transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                 whileHover={{ y: -8 }}
                 className={cn(
-                    "relative flex flex-col p-8 rounded-xl transition-all duration-300",
+                    "relative flex flex-col h-full p-8 rounded-xl transition-all duration-300",
                     isPopular
                         ? "bg-white dark:bg-neutral-900 border-2 border-primary shadow-2xl shadow-primary/20 md:scale-105 z-10"
                         : "bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-black/10"
@@ -55,18 +40,29 @@ export default function PricingCard({ plan, index }) {
                     </div>
                 )}
 
-                <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">{title}</h3>
-                    <p className="text-neutral-500 dark:text-neutral-400 text-sm">{description}</p>
+                <div className="mb-6">
+                    <h3 className="text-2xl font-black text-neutral-900 dark:text-white mb-2 tracking-tight">{title}</h3>
+                    <p className="text-neutral-500 dark:text-neutral-400 text-[15px] leading-relaxed line-clamp-2 h-[44px]">
+                        {description}
+                    </p>
                 </div>
 
-                <div className="mb-8 flex items-baseline gap-2">
-                    <span className="text-5xl font-extrabold text-neutral-900 dark:text-white tracking-tight">₹{price}</span>
+                <div className="mb-6 flex items-baseline gap-1">
+                    <span className="text-5xl font-extrabold text-neutral-900 dark:text-white tracking-tighter">₹{price}</span>
+                    <span className="text-lg font-medium text-neutral-500 dark:text-neutral-400">/month</span>
                 </div>
 
-                <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide mb-8">
-                    {billingCycle}
-                </p>
+                <div className="flex flex-col gap-1 mb-8">
+                    <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
+                        {billingCycle}
+                    </p>
+                    <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
+                        <span className="font-bold text-neutral-700 dark:text-neutral-300">₹{plan.totalPrice || price}</span>
+                        {plan.originalPrice && (
+                            <span className="line-through ml-1 opacity-70">₹{plan.originalPrice}</span>
+                        )}
+                    </p>
+                </div>
 
                 <div className="flex-1">
                     <ul className="space-y-4 mb-8">
@@ -86,26 +82,16 @@ export default function PricingCard({ plan, index }) {
                     </ul>
                 </div>
 
-                <button
-                    onClick={handlePayment}
-                    disabled={isProcessing}
+                <Button
+                    onClick={onGetStarted}
+                    text="Get Started"
                     className={cn(
                         "w-full py-4 rounded-xl font-bold text-center transition-all duration-300 flex items-center justify-center",
                         isPopular
                             ? "bg-primary text-white hover:bg-[#e0614c] hover:shadow-lg hover:shadow-primary/30"
-                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700",
-                        isProcessing && "opacity-70 cursor-not-allowed"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700"
                     )}
-                >
-                    {isProcessing ? (
-                        <span className="flex items-center gap-2">
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Processing...
-                        </span>
-                    ) : (
-                        "Get Started"
-                    )}
-                </button>
+                />
             </motion.div>
         </>
     );

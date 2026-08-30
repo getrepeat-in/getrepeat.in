@@ -1,14 +1,14 @@
 import Faqs from "./fragments/faqs";
 import { Hero } from "./fragments/hero";
-import FeaturesSection from "./fragments/features";
 import Testimonials from "./fragments/reviews";
 import PricingSection from "./fragments/pricing";
+// import FeaturesSection from "./fragments/features";
 
 const Home = () => {
     return (
         <div>
             <Hero />
-            <FeaturesSection />
+            {/* <FeaturesSection /> */}
             <PricingSection />
             <Testimonials />
             <Faqs />
