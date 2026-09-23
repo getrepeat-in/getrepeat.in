@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/global/button";
 import { Check, Loader2, X } from "lucide-react";
 import { usePayment } from "@/hooks/use-payment";
+import { PRICING_ADDONS } from "@/constants/pricing";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function PricingCard({ plan, index }) {
@@ -15,6 +16,32 @@ export default function PricingCard({ plan, index }) {
 
     const [showPhoneModal, setShowPhoneModal] = useState(false);
     const [phone, setPhone] = useState("");
+    const [selectedAddons, setSelectedAddons] = useState([]);
+    const [showAllFeatures, setShowAllFeatures] = useState(false);
+
+    const toggleAddon = (addonId) => {
+        setSelectedAddons(prev =>
+            prev.includes(addonId)
+                ? prev.filter(id => id !== addonId)
+                : [...prev, addonId]
+        );
+    };
+
+    const addonsTotal = selectedAddons.reduce((sum, id) => {
+        const addon = PRICING_ADDONS.find(a => a._id === id);
+        return sum + (addon ? addon.price : 0);
+    }, 0);
+
+    const basePrice = plan.totalPrice || price;
+    const finalPrice = basePrice + addonsTotal;
+
+    const selectedAddonTitles = selectedAddons
+        .map(id => PRICING_ADDONS.find(a => a._id === id)?.title)
+        .filter(Boolean);
+
+    const displayTitle = selectedAddonTitles.length > 0
+        ? `${title} + ${selectedAddonTitles.join(" + ")}`
+        : title;
 
     const onGetStarted = () => {
         setShowPhoneModal(true);
@@ -26,11 +53,11 @@ export default function PricingCard({ plan, index }) {
 
         setShowPhoneModal(false);
         handlePayment({
-            planTitle: title,
-            price: plan.totalPrice || price,
+            planTitle: displayTitle,
+            price: finalPrice,
             phone: phone,
             onSuccess: (res) => {
-                router.push(`/success?order_id=${res.razorpay_order_id}&plan=${encodeURIComponent(title)}&amount=${plan.totalPrice || price}`);
+                router.push(`/success?order_id=${res.razorpay_order_id}&plan=${encodeURIComponent(displayTitle)}&amount=${finalPrice}`);
             },
             onError: (err) => {
                 console.error("Payment Error:", err);
@@ -50,7 +77,7 @@ export default function PricingCard({ plan, index }) {
                 transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                 whileHover={{ y: -8 }}
                 className={cn(
-                    "relative flex flex-col h-full p-8 rounded-xl transition-all duration-300",
+                    "relative flex flex-col h-full p-6 rounded-xl transition-all duration-300",
                     isPopular
                         ? "bg-white dark:bg-neutral-900 border-2 border-primary shadow-2xl shadow-primary/20 md:scale-105 z-10"
                         : "bg-white/50 dark:bg-neutral-900/50 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 shadow-xl shadow-black/5 hover:shadow-2xl hover:shadow-black/10"
@@ -83,17 +110,24 @@ export default function PricingCard({ plan, index }) {
                     <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
                         {billingCycle}
                     </p>
-                    <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide">
-                        <span className="font-bold text-neutral-700 dark:text-neutral-300">₹{plan.totalPrice || price}</span>
-                        {plan.originalPrice && (
-                            <span className="line-through ml-1 opacity-70">₹{plan.originalPrice}</span>
+                    <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wide flex flex-col items-start">
+                        <span>
+                            <span className="font-bold text-neutral-700 dark:text-neutral-300">₹{finalPrice}</span>
+                            {plan.originalPrice && addonsTotal === 0 && (
+                                <span className="line-through ml-1 opacity-70">₹{plan.originalPrice}</span>
+                            )}
+                        </span>
+                        {addonsTotal > 0 && (
+                            <span className="text-[10px] text-primary lowercase mt-0.5">
+                                (includes ₹{addonsTotal} in add-ons)
+                            </span>
                         )}
                     </p>
                 </div>
 
                 <div className="flex-1">
-                    <ul className="space-y-4 mb-8">
-                        {features.map((feature, i) => (
+                    <ul className="space-y-4">
+                        {features.slice(0, showAllFeatures ? features.length : 5).map((feature, i) => (
                             <li key={i} className="flex items-start gap-3">
                                 <div className={cn(
                                     "mt-0.5 rounded-full p-1 flex-shrink-0",
@@ -107,19 +141,73 @@ export default function PricingCard({ plan, index }) {
                             </li>
                         ))}
                     </ul>
+
+                    {features.length > 5 && (
+                        <button
+                            onClick={() => setShowAllFeatures(!showAllFeatures)}
+                            className="mt-4 text-sm font-bold text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                        >
+                            {showAllFeatures ? "View less" : `View ${features.length - 5} more`}
+                        </button>
+                    )}
+
+                    {PRICING_ADDONS && PRICING_ADDONS.length > 0 && (
+                        <div className="mt-8 border-t border-neutral-100 dark:border-neutral-800 pt-6 mb-8">
+                            <p className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wide mb-4">Optional Add-ons</p>
+                            <div className="space-y-4">
+                                {PRICING_ADDONS.map(addon => (
+                                    <label key={addon._id} className="flex items-start gap-3 cursor-pointer group">
+                                        <div className={cn(
+                                            "relative flex items-center justify-center w-5 h-5 mt-0.5 rounded border transition-colors flex-shrink-0",
+                                            selectedAddons.includes(addon._id)
+                                                ? "bg-primary border-primary text-white"
+                                                : "bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 group-hover:border-primary"
+                                        )}>
+                                            <input
+                                                type="checkbox"
+                                                className="sr-only"
+                                                checked={selectedAddons.includes(addon._id)}
+                                                onChange={() => toggleAddon(addon._id)}
+                                            />
+                                            {selectedAddons.includes(addon._id) && <Check className="w-3.5 h-3.5" strokeWidth={3} />}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start gap-2">
+                                                <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 leading-tight">{addon.title}</span>
+                                                <span className="text-sm font-bold text-primary whitespace-nowrap">+₹{addon.price}</span>
+                                            </div>
+                                            <span className="text-xs text-neutral-500 dark:text-neutral-400 block mt-1 leading-snug">{addon.description}</span>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                <Button
-                    onClick={onGetStarted}
-                    disabled={isProcessing}
-                    text={isProcessing ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Processing...</span> : "Get Started"}
-                    className={cn(
-                        "w-full py-4 rounded-xl font-bold text-center transition-all duration-300 flex items-center justify-center",
-                        isPopular
-                            ? "bg-primary text-white hover:bg-[#e0614c] hover:shadow-lg hover:shadow-primary/30"
-                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                <div className="mt-8">
+                    <Button
+                        onClick={onGetStarted}
+                        disabled={isProcessing}
+                        text={isProcessing ? (
+                        <span className="flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" /> Processing...
+                        </span>
+                    ) : (
+                        <span className="flex items-center justify-center gap-2.5">
+                            <span>Get Started</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-40"></span>
+                            <span>₹{finalPrice}</span>
+                        </span>
                     )}
-                />
+                        className={cn(
+                            "w-full py-4 rounded-xl font-bold text-center transition-all duration-300 flex items-center justify-center",
+                            isPopular
+                                ? "bg-primary text-white hover:bg-[#e0614c] hover:shadow-lg hover:shadow-primary/30"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                        )}
+                    />
+                </div>
             </motion.div>
 
             <AnimatePresence>
@@ -173,7 +261,7 @@ export default function PricingCard({ plan, index }) {
 
                                 <Button
                                     type="submit"
-                                    text="Proceed to Payment"
+                                    text={`Proceed to Pay ₹${finalPrice}`}
                                     className="w-full py-3.5 rounded-xl font-bold bg-primary text-white hover:bg-[#e0614c] transition-colors"
                                 />
                             </form>

@@ -1,114 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, User, Bot } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ChatWidget() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([
-        { id: 1, text: "Hi there! 👋 How can we help you today?", isBot: true },
-    ]);
-
-    const handleSend = (e) => {
-        e.preventDefault();
-        if (!message.trim()) return;
-
-        setMessages((prev) => [...prev, { id: Date.now(), text: message, isBot: false }]);
-        setMessage("");
-
-        setTimeout(() => {
-            setMessages((prev) => [
-                ...prev,
-                { id: Date.now() + 1, text: "Thanks for reaching out! A support agent will be with you shortly.", isBot: true },
-            ]);
-        }, 1000);
-    };
-
     return (
         <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95, transformOrigin: "bottom right" }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="mb-4 w-[350px] sm:w-[400px] h-[550px] max-h-[80vh] flex flex-col bg-white dark:bg-[#10101a]/95 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-md shadow-2xl shadow-black/20 overflow-hidden"
-                    >
-                        <div className="bg-primary p-6 flex items-center justify-between text-white relative overflow-hidden shrink-0">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16" />
-                            <div className="flex items-center gap-4 relative z-10">
-                                <div className="w-12 h-12 bg-white/20 rounded-md flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                                    <Bot className="w-6 h-6 text-white" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-bold text-xl leading-tight">Support</h3>
-                                    <p className="text-sm text-white/80 font-medium truncate">We typically reply in minutes</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-white/20 transition-colors relative z-10"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
-                        </div>
-
-                        <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-6 scroll-smooth bg-neutral-50/50 dark:bg-transparent">
-                            {messages.map((msg) => (
-                                <motion.div
-                                    key={msg.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className={`flex items-end gap-3 max-w-[85%] ${msg.isBot ? "self-start" : "self-end flex-row-reverse"}`}
-                                >
-                                    <div className={`w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0 shadow-sm ${msg.isBot ? "bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-100 dark:border-neutral-700" : "bg-primary text-white"}`}>
-                                        {msg.isBot ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                                    </div>
-                                    <div
-                                        className={`p-4 rounded-md text-[15px] leading-relaxed shadow-sm ${msg.isBot
-                                            ? "bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-bl-none border border-neutral-100 dark:border-neutral-700"
-                                            : "bg-gradient-to-br from-primary to-[#fa5e43] text-white rounded-br-none shadow-md shadow-primary/20"
-                                            }`}
-                                    >
-                                        {msg.text}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        <div className="p-4 bg-white/80 dark:bg-black/40 border-t border-neutral-100 dark:border-neutral-800 backdrop-blur-md shrink-0">
-                            <form onSubmit={handleSend} className="relative flex items-center">
-                                <input
-                                    type="text"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    placeholder="Type your message..."
-                                    className="w-full bg-neutral-100 dark:bg-neutral-900/80 border border-transparent dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-md py-4 pl-6 pr-14 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-white dark:focus:bg-neutral-900 transition-all placeholder:text-neutral-400 font-medium"
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={!message.trim()}
-                                    className="absolute right-2 w-10 h-10 flex items-center justify-center bg-primary text-white rounded-md hover:bg-[#ff8c78] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                                >
-                                    <Send className="w-4 h-4 ml-0.5" />
-                                </button>
-                            </form>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <motion.button
+            <motion.a
+                href="https://wa.me/919311507651"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-16 h-16 bg-primary to-[#ff8c78] text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center transition-all hover:shadow-2xl hover:shadow-primary/40 border-2 border-white/20"
+                className="w-16 h-16 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-xl shadow-[#25D366]/30 flex items-center justify-center transition-all hover:shadow-2xl hover:shadow-[#25D366]/40 border-2 border-white/20"
+                title="Chat with us on WhatsApp"
             >
-                {isOpen ? <X className="w-7 h-7" /> : <MessageCircle className="w-7 h-7 fill-current" />}
-            </motion.button>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                </svg>
+            </motion.a>
         </div>
     );
 }

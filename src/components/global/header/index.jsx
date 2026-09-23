@@ -88,8 +88,8 @@ export default function Header() {
 }
 
 
-export const GetStartedButton = () => {
+export const GetStartedButton = ({ amount = 0 }) => {
     return (
-        <Button text="Get Started" variant="primary" href="/register" size="sm" icon={{ icon: Rocket, position: "start" }} />
+        <Button text="Get Started {amount}" variant="primary" href="/register" size="sm" icon={{ icon: Rocket, position: "start" }} />
     )
 }

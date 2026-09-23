@@ -9,8 +9,13 @@ export const PRICING_DATA = [
         isPopular: false,
         features: [
             "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
             "Real-time Analytics Dashboard",
-            "Digital Menu Management",
             "Standard Customer Support",
             "Standard QR Designs"
         ]
@@ -25,11 +30,16 @@ export const PRICING_DATA = [
         isPopular: true,
         badge: "Most Popular",
         features: [
-            "Everything in Monthly",
+            "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
             "Advanced Customer Insights",
-            "Priority Email Support",
             "Custom Branded QR Codes",
-            "Marketing Toolkit Access"
+            "Priority Email Support"
         ]
     },
     {
@@ -42,11 +52,16 @@ export const PRICING_DATA = [
         isPopular: false,
         badge: "Best Value",
         features: [
-            "Everything in Quarterly",
-            "Dedicated Account Manager",
+            "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
+            "API Access & POS Integrations",
             "24/7 Phone & Priority Support",
-            "API Access & Integrations",
-            "Free Hardware Replacements"
+            "Dedicated Account Manager"
         ]
     }
 ];
@@ -69,6 +84,7 @@ export const PRICING_FAQ = [
         answer: "Yes, we offer a 7-day money-back guarantee for first-time subscribers. If you're not completely satisfied, just let us know within the first week for a full refund."
     }
 ];
+
 export const PRICING_PLANS = [
     {
         _id: "plan_monthly",
@@ -80,8 +96,13 @@ export const PRICING_PLANS = [
         type: "subscription",
         features: [
             "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
             "Real-time Analytics Dashboard",
-            "Digital Menu Management",
             "Standard Customer Support",
             "Standard QR Designs"
         ]
@@ -98,11 +119,16 @@ export const PRICING_PLANS = [
         isPopular: true,
         type: "subscription",
         features: [
-            "Everything in Monthly",
+            "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
             "Advanced Customer Insights",
-            "Priority Email Support",
             "Custom Branded QR Codes",
-            "Marketing Toolkit Access"
+            "Priority Email Support"
         ]
     },
     {
@@ -116,11 +142,33 @@ export const PRICING_PLANS = [
         badge: "Best Value",
         type: "subscription",
         features: [
-            "Everything in Quarterly",
-            "Dedicated Account Manager",
+            "Unlimited QR Code Scans",
+            "Digital Menu Management (Categories & Add-ons)",
+            "Order & Table Management",
+            "Customizable Restaurant Storefront",
+            "Staff & Role Permissions Management",
+            "Promotions & Discount Engine",
+            "Instagram Post Mapping Integration",
+            "API Access & POS Integrations",
             "24/7 Phone & Priority Support",
-            "API Access & Integrations",
-            "Free Hardware Replacements"
+            "Dedicated Account Manager"
         ]
+    }
+];
+
+export const PRICING_ADDONS = [
+    {
+        _id: "addon_domain",
+        title: "Custom Domain",
+        description: "Custom domain mapping (+ domain cost to be borne by the customer).",
+        price: 999,
+        type: "one-time",
+    },
+    {
+        _id: "addon_payment_gateway",
+        title: "Payment Gateway Integration (Razorpay)",
+        description: "Support for integrating your preferred payment gateway.",
+        price: 499,
+        type: "one-time",
     }
 ];

@@ -54,7 +54,7 @@ export const Hero = () => {
                             size="lg"
                             href="https://bite.getrepeat.in"
                             icon={{ icon: PlayCircle, position: "start" }}
-                            className="flex-1 sm:w-auto sm:flex-none font-medium rounded-full bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex justify-center px-1 sm:px-8 text-sm sm:text-base whitespace-nowrap"
+                            className="flex-1 sm:w-auto sm:flex-none font-medium rounded-md bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex justify-center px-1 sm:px-8 text-sm sm:text-base whitespace-nowrap"
                         />
                         <Button
                             text="Get Started"
@@ -62,7 +62,7 @@ export const Hero = () => {
                             size="lg"
                             href="https://app.getrepeat.in"
                             icon={{ icon: ArrowRight, position: "end" }}
-                            className="flex-1 sm:w-auto sm:flex-none font-semibold rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex justify-center px-1 sm:px-8 text-sm sm:text-base whitespace-nowrap"
+                            className="flex-1 sm:w-auto sm:flex-none font-semibold rounded-md shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex justify-center px-1 sm:px-8 text-sm sm:text-base whitespace-nowrap"
                         />
                     </div>
                 </div>
