@@ -69,3 +69,58 @@ export const PRICING_FAQ = [
         answer: "Yes, we offer a 7-day money-back guarantee for first-time subscribers. If you're not completely satisfied, just let us know within the first week for a full refund."
     }
 ];
+export const PRICING_PLANS = [
+    {
+        _id: "plan_monthly",
+        title: "Monthly Plan",
+        description: "Perfect for testing the waters.",
+        price: 999,
+        billingCycle: "monthly",
+        totalPrice: 999,
+        type: "subscription",
+        features: [
+            "Unlimited QR Code Scans",
+            "Real-time Analytics Dashboard",
+            "Digital Menu Management",
+            "Standard Customer Support",
+            "Standard QR Designs"
+        ]
+    },
+    {
+        _id: "plan_quarterly",
+        title: "Quarterly Plan",
+        description: "Great balance of commitment and value.",
+        price: 499,
+        billingCycle: "quarterly",
+        totalPrice: 1499,
+        originalPrice: 2997,
+        badge: "Most Popular",
+        isPopular: true,
+        type: "subscription",
+        features: [
+            "Everything in Monthly",
+            "Advanced Customer Insights",
+            "Priority Email Support",
+            "Custom Branded QR Codes",
+            "Marketing Toolkit Access"
+        ]
+    },
+    {
+        _id: "plan_yearly",
+        title: "Annual Plan",
+        description: "Maximum savings for established restaurants.",
+        price: 333,
+        billingCycle: "yearly",
+        totalPrice: 3999,
+        originalPrice: 11988,
+        badge: "Best Value",
+        type: "subscription",
+        features: [
+            "Everything in Quarterly",
+            "Dedicated Account Manager",
+            "24/7 Phone & Priority Support",
+            "API Access & Integrations",
+            "Free Hardware Replacements"
+        ]
+    }
+];

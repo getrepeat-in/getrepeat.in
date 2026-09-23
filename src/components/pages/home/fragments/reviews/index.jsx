@@ -34,7 +34,7 @@ export default function Testimonials() {
                         <span className="text-3xl md:text-6xl leading-tight inline-block">
                             Our <br />
                             <span className="inline-block mt-2 md:mt-4">
-                                <Highlighter action="highlight" color="var(--primary)">
+                                <Highlighter action="highlight" color="var(--primary)" padding={8}>
                                     <span className="text-white relative z-10 px-2 py-1">Customers</span>
                                 </Highlighter>
                             </span>

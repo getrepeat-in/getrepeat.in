@@ -14,7 +14,7 @@ export default function PricingSection() {
                     <>
                         <h2 className="text-4xl md:text-5xl font-extrabold text-neutral-900 dark:text-white tracking-tight mb-6">
                             Simple, transparent{" "}
-                            <Highlighter action="highlight" color="var(--primary)">
+                            <Highlighter action="highlight" color="var(--primary)" padding={8}>
                                 <span className="relative z-10 px-2 text-white">pricing</span>
                             </Highlighter>
                         </h2>

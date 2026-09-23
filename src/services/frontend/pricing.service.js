@@ -1,16 +1,17 @@
-import { apiClient } from "@/lib/api-helper";
+import { PRICING_PLANS } from "@/constants/pricing";
 
 export const pricingService = {
     fetchPlans: async (params = {}) => {
         try {
-            let query = '';
-            if (typeof params === 'string') {
-                query = params ? `?type=${encodeURIComponent(params)}` : '';
-            } else if (params && typeof params === 'object' && Object.keys(params).length > 0) {
-                const searchParams = new URLSearchParams(params);
-                query = `?${searchParams.toString()}`;
+            let filteredPlans = PRICING_PLANS;
+            
+            if (typeof params === 'string' && params) {
+                filteredPlans = PRICING_PLANS.filter(plan => plan.type === params);
+            } else if (params && typeof params === 'object' && params.type) {
+                filteredPlans = PRICING_PLANS.filter(plan => plan.type === params.type);
             }
-            return await apiClient(`/api/pricing${query}`);
+
+            return filteredPlans;
         } catch (error) {
             console.error('[PricingService] Error fetching plans:', error.message);
             throw error;
@@ -19,7 +20,9 @@ export const pricingService = {
 
     fetchPlanById: async (id) => {
         try {
-            return await apiClient(`/api/pricing/${id}`);
+            const plan = PRICING_PLANS.find(p => p._id === id);
+            if (!plan) throw new Error("Plan not found");
+            return plan;
         } catch (error) {
             console.error(`[PricingService] Error fetching plan ${id}:`, error.message);
             throw error;

@@ -29,7 +29,7 @@ export const paymentService = {
         return response.json();
     },
 
-    initiateCheckout: async ({ planTitle, price, onSuccess, onError, onDismiss }) => {
+    initiateCheckout: async ({ planTitle, price, phone, onSuccess, onError, onDismiss }) => {
         try {
             const orderData = await paymentService.createOrder(price * 100);
             const options = {
@@ -48,7 +48,7 @@ export const paymentService = {
                         });
                         
                         if (verifyData.success) {
-                            if (onSuccess) onSuccess(verifyData);
+                            if (onSuccess) onSuccess({ ...verifyData, razorpay_order_id: response.razorpay_order_id });
                         } else {
                             if (onError) onError(new Error("Payment verification failed. Please contact support."));
                         }
@@ -62,9 +62,7 @@ export const paymentService = {
                     }
                 },
                 prefill: {
-                    name: "Customer Name",
-                    email: "customer@example.com",
-                    contact: "9999999999"
+                    contact: phone || ""
                 },
                 theme: {
                     color: "#f2715b"

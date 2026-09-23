@@ -1,17 +1,44 @@
 "use client";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
-import { Check } from "lucide-react";
-import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Button from "@/components/global/button";
+import { Check, Loader2, X } from "lucide-react";
+import { usePayment } from "@/hooks/use-payment";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function PricingCard({ plan, index }) {
     const { _id, title, description, price, billingCycle, isPopular, badge, features } = plan;
+    const { isProcessing, handlePayment } = usePayment();
     const router = useRouter();
 
+    const [showPhoneModal, setShowPhoneModal] = useState(false);
+    const [phone, setPhone] = useState("");
+
     const onGetStarted = () => {
-        router.push(`/cart?plan=${_id}`);
+        setShowPhoneModal(true);
+    };
+
+    const submitPhoneAndPay = (e) => {
+        e.preventDefault();
+        if (phone.length < 10) return;
+
+        setShowPhoneModal(false);
+        handlePayment({
+            planTitle: title,
+            price: plan.totalPrice || price,
+            phone: phone,
+            onSuccess: (res) => {
+                router.push(`/success?order_id=${res.razorpay_order_id}&plan=${encodeURIComponent(title)}&amount=${plan.totalPrice || price}`);
+            },
+            onError: (err) => {
+                console.error("Payment Error:", err);
+            },
+            onDismiss: () => {
+                console.log("Payment dismissed");
+            }
+        });
     };
 
     return (
@@ -84,7 +111,8 @@ export default function PricingCard({ plan, index }) {
 
                 <Button
                     onClick={onGetStarted}
-                    text="Get Started"
+                    disabled={isProcessing}
+                    text={isProcessing ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Processing...</span> : "Get Started"}
                     className={cn(
                         "w-full py-4 rounded-xl font-bold text-center transition-all duration-300 flex items-center justify-center",
                         isPopular
@@ -93,6 +121,66 @@ export default function PricingCard({ plan, index }) {
                     )}
                 />
             </motion.div>
+
+            <AnimatePresence>
+                {showPhoneModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            className="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl p-6 w-full max-w-md relative border border-neutral-200 dark:border-neutral-800"
+                        >
+                            <button
+                                onClick={() => setShowPhoneModal(false)}
+                                className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition-colors"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            <div className="mb-6">
+                                <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">Checkout</h3>
+                                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    Please enter your phone number to continue with the {title} payment.
+                                </p>
+                            </div>
+
+                            <form onSubmit={submitPhoneAndPay}>
+                                <div className="mb-6">
+                                    <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                        Phone Number
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 font-medium">+91</span>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                            placeholder="Enter 10 digit number"
+                                            required
+                                            minLength={10}
+                                            maxLength={10}
+                                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                <Button
+                                    type="submit"
+                                    text="Proceed to Payment"
+                                    className="w-full py-3.5 rounded-xl font-bold bg-primary text-white hover:bg-[#e0614c] transition-colors"
+                                />
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     );
 }

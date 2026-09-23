@@ -4,12 +4,13 @@ import { paymentService } from "@/services/frontend/payment.service";
 export const usePayment = () => {
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const handlePayment = async ({ planTitle, price, onSuccess, onError, onDismiss }) => {
+    const handlePayment = async ({ planTitle, price, phone, onSuccess, onError, onDismiss }) => {
         setIsProcessing(true);
         try {
             await paymentService.initiateCheckout({
                 planTitle,
                 price,
+                phone,
                 onSuccess: (res) => {
                     setIsProcessing(false);
                     if (onSuccess) onSuccess(res);
