@@ -52,7 +52,7 @@ export const Hero = () => {
                             text="Live Demo"
                             variant="secondary"
                             size="lg"
-                            href="https://bite.getrepeat.in"
+                            href="https://haldiram.getrepeat.in"
                             icon={{ icon: PlayCircle, position: "start" }}
                             className="flex-1 sm:w-auto sm:flex-none font-medium rounded-md bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all flex justify-center px-1 sm:px-8 text-sm sm:text-base whitespace-nowrap"
                         />
