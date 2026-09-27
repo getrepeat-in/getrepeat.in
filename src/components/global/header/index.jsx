@@ -90,6 +90,6 @@ export default function Header() {
 
 export const GetStartedButton = () => {
     return (
-        <Button text="Get Started" variant="primary" href="/register" size="sm" icon={{ icon: Rocket, position: "start" }} />
+        <Button text="Get Started" variant="primary" href="https://app.getrepeat.in/sign-in" size="sm" icon={{ icon: Rocket, position: "start" }} />
     )
 }
