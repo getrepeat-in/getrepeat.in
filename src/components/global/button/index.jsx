@@ -26,7 +26,7 @@ export default function Button({ text, icon, onClick, href, variant = "primary",
 
     if (href && !isLoading && !disabled) {
         return (
-            <Link href={href} className={combinedClasses} {...props}>
+            <Link href={href} onClick={onClick} className={combinedClasses} {...props}>
                 {content}
             </Link>
         );

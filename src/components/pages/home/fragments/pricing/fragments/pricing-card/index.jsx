@@ -8,6 +8,7 @@ import { Check, Loader2, X } from "lucide-react";
 import { usePayment } from "@/hooks/use-payment";
 import { PRICING_ADDONS } from "@/constants/pricing";
 import { motion, AnimatePresence } from "framer-motion";
+import posthog from "posthog-js";
 
 export default function PricingCard({ plan, index }) {
     const { _id, title, description, price, billingCycle, isPopular, badge, features } = plan;
@@ -43,7 +44,15 @@ export default function PricingCard({ plan, index }) {
         ? `${title} + ${selectedAddonTitles.join(" + ")}`
         : title;
 
+    const checkoutProperties = {
+        plan_id: _id,
+        billing_cycle: billingCycle,
+        amount: finalPrice,
+        addon_count: selectedAddons.length,
+    };
+
     const onGetStarted = () => {
+        posthog.capture("subscription_checkout_opened", checkoutProperties);
         setShowPhoneModal(true);
     };
 
@@ -51,18 +60,22 @@ export default function PricingCard({ plan, index }) {
         e.preventDefault();
         if (phone.length < 10) return;
 
+        posthog.capture("subscription_checkout_started", checkoutProperties);
         setShowPhoneModal(false);
         handlePayment({
             planTitle: displayTitle,
             price: finalPrice,
             phone: phone,
             onSuccess: (res) => {
+                posthog.capture("subscription_payment_completed", checkoutProperties);
                 router.push(`/success?order_id=${res.razorpay_order_id}&plan=${encodeURIComponent(displayTitle)}&amount=${finalPrice}`);
             },
             onError: (err) => {
+                posthog.capture("subscription_payment_failed", checkoutProperties);
                 console.error("Payment Error:", err);
             },
             onDismiss: () => {
+                posthog.capture("subscription_checkout_dismissed", checkoutProperties);
                 console.log("Payment dismissed");
             }
         });

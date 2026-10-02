@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2, MessageCircle, ArrowRight } from 'lucide-react';
+import posthog from 'posthog-js';
 
 export default function SuccessContent() {
     const searchParams = useSearchParams();
@@ -68,6 +69,7 @@ export default function SuccessContent() {
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => posthog.capture('onboarding_whatsapp_opened')}
                     className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 mx-auto"
                 >
                     <div className="flex items-center gap-2">
